@@ -45,17 +45,17 @@ void init(){
 
     Ponto P1 = { 0, -1, azul }, P2 = { 1, -1, azul }, P3 = { 0.5, 0, azul };
     Ponto lista[] = { P1, P2, P3 };
-    addPoligono(Poligonos, 3, &lista);
+    addPoligono(Poligonos, sizeof(lista)/sizeof(lista[0]), &lista);
     Ponto P4 = { -1, 0, azul }, P5 = { -0.2, 1, azul }, P6 = { -1, 1, azul }, P7 = { -1, 0, azul }, P8 = { 0, 0, azul }, P9 = { 0, 0.8, azul };
     Ponto lista2[] = { P4, P5, P6, P7, P8, P9 };
-    addPoligono(Poligonos, 6, &lista2);
+    addPoligono(Poligonos, sizeof(lista2)/sizeof(lista2[0]), &lista2);
 }
 
 int main(int argc, char** argv){
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(400, 400);
+    glutInitWindowSize(600, 600);
     glutInitWindowPosition(100, 100);
     glutCreateWindow("Projeto CG - Paint");
 
