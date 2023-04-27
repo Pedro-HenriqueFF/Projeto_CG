@@ -1,15 +1,8 @@
 #include <stdlib.h>
 #include <GL/glut.h>
-#include "ponto.h"
+#include "listaPonto.h"
 
-Cor preto = { 0.0, 0.0, 0.0 };
-
-struct lista{
-    int qtd_pontos;
-    Ponto pontos[MAX_POINTS];
-};
-
-Lista_Pontos* criar(){
+Lista_Pontos* criarListaPontos(){
     Lista_Pontos *lp;
     lp = (Lista_Pontos*)malloc(sizeof(Lista_Pontos));
     if(lp != NULL){
@@ -18,7 +11,7 @@ Lista_Pontos* criar(){
     return lp;
 }
 
-int cheia(Lista_Pontos *lp){
+int cheiaListaPontos(Lista_Pontos *lp){
     if (lp == NULL)
         return -1;
     else if (lp->qtd_pontos == MAX_POINTS)
@@ -30,10 +23,10 @@ int cheia(Lista_Pontos *lp){
 int addPonto(Lista_Pontos *lp, float x, float y){
     if (lp == NULL)
         return 0;
-    else if (cheia(lp))
+    else if (cheiaListaPontos(lp))
         return 0;
     else{
-        Ponto p = { x, y, preto };
+        Ponto p = { x, y, verde };
         lp->pontos[lp->qtd_pontos] = p;
         lp->qtd_pontos++;
         return 1;
