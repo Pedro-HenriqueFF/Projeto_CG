@@ -84,7 +84,7 @@ void desenhaRetas(){
 
     glLineWidth(2.0);
     glBegin(GL_LINES);
-    for (int i = 0; i < quantidade_pontos; i++){
+    for (int i = 0; i < quantidade_retas; i++){
         glColor3f(retas[i].inicio.cor.red, retas[i].inicio.cor.green, retas[i].inicio.cor.blue); //define a cor azul
         glVertex2f(retas[i].inicio.x, retas[i].inicio.y); //define localização do vértice A
         glColor3f(retas[i].fim.cor.red, retas[i].fim.cor.green, retas[i].fim.cor.blue);

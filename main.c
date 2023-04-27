@@ -5,6 +5,7 @@
 #include "poligono.c"
 
 Lista_Pontos *Pontos = NULL;
+Lista_Retas *Retas = NULL;
 Lista_Poligonos *Poligonos = NULL;
 
 void display(){
@@ -15,6 +16,7 @@ void display(){
     glLoadIdentity();
 
     desenhaPoligonos(Poligonos);
+    desenhaRetas(Retas);
     desenhaPontos(Pontos);
 
     glFlush(); 
@@ -34,6 +36,13 @@ void init(){
     addPonto(Pontos, -0.5, 0);
     addPonto(Pontos, -0.5, -0.5);
 
+    Ponto A = { -0.5, 0.3, vermelho }, B = { 0.5, -0.1, vermelho };
+    addReta(Retas, A, B);
+    Ponto C = { -0.5, -0.7, vermelho }, D = { -0.1, 0.8, vermelho };
+    addReta(Retas, C, D);
+    Ponto E = {0.5, -0.6, vermelho }, F = { 0.7, 0.5, vermelho };
+    addReta(Retas, E, F);
+
     Ponto P1 = { 0, -1, azul }, P2 = { 1, -1, azul }, P3 = { 0.5, 0, azul };
     Ponto lista[] = { P1, P2, P3 };
     addPoligono(Poligonos, 3, &lista);
@@ -51,6 +60,7 @@ int main(int argc, char** argv){
     glutCreateWindow("Projeto CG - Paint");
 
     Pontos = criarListaPontos();
+    Retas = criarListaRetas();
     Poligonos = criarListaPoligonos();
 
     init();

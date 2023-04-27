@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <GL/glut.h>
-#include "ponto.c"
+#include "reta.c"
 #include "listaPoligono.h"
 
 Lista_Poligonos* criarListaPoligonos(){
