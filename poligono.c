@@ -39,11 +39,14 @@ int addPoligono(Lista_Poligonos *lpl, int tamanho, Ponto *lpt){
     else if (cheiaListaPoligonos(lpl))
         return 0;
     else{
+        Ponto centro = { 0.0, 0.0, preto };
         PontoPoligono *aux;
         aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
         if(aux != NULL){
             aux->p = lpt[0];
             aux->prox = NULL;
+            centro.x += aux->p.x;
+            centro.y += aux->p.y;
         }
         lpl->poligonos[lpl->qtd_poligonos].tamanho = tamanho;
         lpl->poligonos[lpl->qtd_poligonos].inicial = aux;
@@ -52,7 +55,12 @@ int addPoligono(Lista_Poligonos *lpl, int tamanho, Ponto *lpt){
         for (int i = 1; i < tamanho; i++){
             inserir(&aux2, lpt[i]);
             aux2 = aux2->prox;
+            centro.x += aux2->p.x;
+            centro.y += aux2->p.y;
         }
+        centro.x /= tamanho;
+        centro.y /= tamanho;
+        lpl->poligonos[lpl->qtd_poligonos].centroide = centro;
         lpl->qtd_poligonos++;
         return 1;
     }
@@ -66,15 +74,15 @@ int desenhaPoligonos(Lista_Poligonos *lpl){
     else{
         glLineWidth(2.0);
         for (int i = 0; i < lpl->qtd_poligonos; i++){
-            glBegin(GL_POLYGON);
             if (lpl->poligonos[i].inicial != NULL){
                 PontoPoligono *aux = lpl->poligonos[i].inicial;
+                glBegin(GL_POLYGON);
                 for (aux; aux != NULL; aux = aux->prox){
                     glColor3f(aux->p.cor.red, aux->p.cor.green, aux->p.cor.blue);
                     glVertex2f(aux->p.x, aux->p.y);
                 }
+                glEnd();
             }
-            glEnd();
         }
         return 1;
     }

@@ -5,5 +5,6 @@ typedef struct ponto{
 
 typedef struct{
     int tamanho;
+    Ponto centroide;
     PontoPoligono *inicial;
 }Poligono;

@@ -8,6 +8,17 @@ Lista_Pontos *Pontos = NULL;
 Lista_Retas *Retas = NULL;
 Lista_Poligonos *Poligonos = NULL;
 
+void desenhaPlano(){
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_LINES);
+        glVertex2i(0, -1);
+        glVertex2i(0, 1);
+
+        glVertex2i(-1, 0);
+        glVertex2i(1, 0);
+    glEnd();
+}
+
 void display(){
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -15,6 +26,7 @@ void display(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    desenhaPlano();
     desenhaPoligonos(Poligonos);
     desenhaRetas(Retas);
     desenhaPontos(Pontos);

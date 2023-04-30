@@ -27,7 +27,8 @@ int addReta(Lista_Retas *lr, Ponto a, Ponto b){
     else if (cheiaListaRetas(lr))
         return 0;
     else{
-        Reta r = { a, b };
+        Ponto centro = { (a.x+b.x)/2, (a.y+b.y)/2, preto };
+        Reta r = { a, centro, b };
         lr->retas[lr->qtd_retas] = r;
         lr->qtd_retas++;
         return 1;
