@@ -8,15 +8,73 @@ Lista_Pontos *Pontos = NULL;
 Lista_Retas *Retas = NULL;
 Lista_Poligonos *Poligonos = NULL;
 
-void desenhaPlano(){
-    glColor3f(0.0, 0.0, 0.0);
-    glBegin(GL_LINES);
-        glVertex2i(0, -1);
-        glVertex2i(0, 1);
+void init(void);
+void createMenu(void);
+void menu(int value);
+void display(void);
+void desenhaPlano(void);
+int main(int argc, char** argv);
 
-        glVertex2i(-1, 0);
-        glVertex2i(1, 0);
-    glEnd();
+static int win;
+static int mainmenu;
+static int criar;
+static int selecionar;
+static int val = 0;
+
+float Width = 300;
+float Height = 300;
+float mousex, mousey;
+
+void init(){
+
+    glClearColor(1.0, 1.0, 1.0, 0.0); 
+
+    glMatrixMode(GL_PROJECTION); 
+    glOrtho(-Width,Width,-Height,Height,-1.0f,1.0f);
+
+    Ponto A = { -150, 90, vermelho }, B = { 150, -30, vermelho };
+    addReta(Retas, A, B);
+    Ponto C = { -150, -210, vermelho }, D = { -30, 240, vermelho };
+    addReta(Retas, C, D);
+    Ponto E = { 150, -180, vermelho }, F = { 210, 150, vermelho };
+    addReta(Retas, E, F);
+
+    Ponto P1 = { 0, -300, azul }, P2 = { 300, -300, azul }, P3 = { 150, 0, azul };
+    Ponto lista[] = { P1, P2, P3 };
+    addPoligono(Poligonos, sizeof(lista)/sizeof(lista[0]), &lista);
+    Ponto P4 = { -300, 0, azul }, P5 = { -60, 300, azul }, P6 = { -300, 300, azul }, P7 = { -300, 0, azul }, P8 = { 0, 0, azul }, P9 = { 0, 240, azul };
+    Ponto lista2[] = { P4, P5, P6, P7, P8, P9 };
+    addPoligono(Poligonos, sizeof(lista2)/sizeof(lista2[0]), &lista2);
+}
+
+void createMenu(){
+    criar = glutCreateMenu(menu);
+    glutAddMenuEntry("Ponto", 1);
+    glutAddMenuEntry("Reta", 2);
+    glutAddMenuEntry("Poligono", 3);
+
+    selecionar = glutCreateMenu(menu);
+    glutAddMenuEntry("Ponto", 4);
+    glutAddMenuEntry("Reta", 5);
+    glutAddMenuEntry("Poligono", 6);
+
+    mainmenu = glutCreateMenu(menu);
+    glutAddSubMenu("Criar", criar);
+    glutAddSubMenu("Selecionar", selecionar);
+    glutAddMenuEntry("Sair", 0);
+
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+void menu(int value){
+    if(value == 0){
+        glutDestroyWindow(win);
+        exit(0);
+    }else{
+        val = value;
+    }
+
+    glutPostRedisplay();
 }
 
 void display(){
@@ -31,45 +89,38 @@ void display(){
     desenhaRetas(Retas);
     desenhaPontos(Pontos);
 
-    glFlush(); 
+    glutSwapBuffers();
 }
 
-void init(){
+void desenhaPlano(){
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_LINES);
+        glVertex2i(-300, 0);
+        glVertex2i(300, 0);
 
-    glClearColor(1.0, 1.0, 1.0, 1.0); 
+        glVertex2i(0, -300);
+        glVertex2i(0, 300);
+    glEnd();
+}
 
-    glMatrixMode(GL_PROJECTION); 
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0); 
-
-    addPonto(Pontos, 0, 0);
-    addPonto(Pontos, 0, 0.5);
-    addPonto(Pontos, 0.5, 0.5);
-    addPonto(Pontos, 0, -0.5);
-    addPonto(Pontos, -0.5, 0);
-    addPonto(Pontos, -0.5, -0.5);
-
-    Ponto A = { -0.5, 0.3, vermelho }, B = { 0.5, -0.1, vermelho };
-    addReta(Retas, A, B);
-    Ponto C = { -0.5, -0.7, vermelho }, D = { -0.1, 0.8, vermelho };
-    addReta(Retas, C, D);
-    Ponto E = {0.5, -0.6, vermelho }, F = { 0.7, 0.5, vermelho };
-    addReta(Retas, E, F);
-
-    Ponto P1 = { 0, -1, azul }, P2 = { 1, -1, azul }, P3 = { 0.5, 0, azul };
-    Ponto lista[] = { P1, P2, P3 };
-    addPoligono(Poligonos, sizeof(lista)/sizeof(lista[0]), &lista);
-    Ponto P4 = { -1, 0, azul }, P5 = { -0.2, 1, azul }, P6 = { -1, 1, azul }, P7 = { -1, 0, azul }, P8 = { 0, 0, azul }, P9 = { 0, 0.8, azul };
-    Ponto lista2[] = { P4, P5, P6, P7, P8, P9 };
-    addPoligono(Poligonos, sizeof(lista2)/sizeof(lista2[0]), &lista2);
+void mouse(int button, int state , int x , int y) {
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 1){
+        mousex = x - Width;
+        mousey = Height - y;
+        addPonto(Pontos, mousex, mousey);
+        glutPostRedisplay();
+    } 
 }
 
 int main(int argc, char** argv){
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(600, 600);
     glutInitWindowPosition(100, 100);
-    glutCreateWindow("Projeto CG - Paint");
+    win = glutCreateWindow("Projeto CG - Paint");
+
+    createMenu();
 
     Pontos = criarListaPontos();
     Retas = criarListaRetas();
@@ -77,6 +128,7 @@ int main(int argc, char** argv){
 
     init();
 
+    glutMouseFunc(mouse);
     glutDisplayFunc(display);
     glutMainLoop();
     return 0;
