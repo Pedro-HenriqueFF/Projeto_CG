@@ -16,3 +16,4 @@ void desenhaPontos(Lista_Pontos *, int p);
 int selecionaPonto(Lista_Pontos *lp, float mx, float my, int t);
 int pickPonto(float px, float py, float mx, float my, int t);
 int transladarPonto(Lista_Pontos *, float mx, float my, int p, Matriz_Transformacao *);
+int rotacionarPonto(Lista_Pontos *, int p, Matriz_Transformacao *);

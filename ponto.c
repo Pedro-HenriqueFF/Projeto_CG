@@ -100,10 +100,24 @@ int transladarPonto(Lista_Pontos *lp, float mx, float my, int ponto, Matriz_Tran
     if (lp == NULL)
         return 0;
     else{
-        int x = lp->pontos[ponto].x;
-        int y = lp->pontos[ponto].y;
+        float x = lp->pontos[ponto].x;
+        float y = lp->pontos[ponto].y;
         Matriz_Ponto *mp = criarMatrizPonto(x, y);
         mp = multiplicarMatrizPonto(translacao, mp);
+        lp->pontos[ponto].x = mp->matriz[0][0];
+        lp->pontos[ponto].y = mp->matriz[0][1];
+        return 1;
+    }
+}
+
+int rotacionarPonto(Lista_Pontos *lp, int ponto, Matriz_Transformacao *rotacao){
+    if (lp == NULL)
+        return 0;
+    else{
+        float x = lp->pontos[ponto].x;
+        float y = lp->pontos[ponto].y;
+        Matriz_Ponto *mp = criarMatrizPonto(x, y);
+        mp = multiplicarMatrizPonto(rotacao, mp);
         lp->pontos[ponto].x = mp->matriz[0][0];
         lp->pontos[ponto].y = mp->matriz[0][1];
         return 1;

@@ -1,12 +1,16 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <GL/glut.h>
 #include "poligono.c"
 
 Lista_Pontos *Pontos = NULL;
 Lista_Retas *Retas = NULL;
 Lista_Poligonos *Poligonos = NULL;
+
+Matriz_Transformacao *rotacao_pos = NULL;
+Matriz_Transformacao *rotacao_neg = NULL;
 
 void init(void);
 void createMenu(void);
@@ -27,6 +31,8 @@ int reta = -1;
 int poligono = -1;
 
 int estado = 0;
+
+float theta = 0.05;
 
 float Width = 300;
 float Height = 300;
@@ -68,7 +74,7 @@ void createMenu(){
     mainmenu = glutCreateMenu(menu);
     glutAddSubMenu("Criar", criar);
     glutAddSubMenu("Selecionar", selecionar);
-    glutAddMenuEntry("Cancelar", 0);
+    glutAddMenuEntry("Cancelar", 0); 
     glutAddMenuEntry("Sair", -1);
 
     glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -152,8 +158,15 @@ void special(int key, int x, int y){
             if (estado == 2) estado = 0;
             else estado = 2;
         }
+    }else if(key == GLUT_KEY_LEFT){
+        if(val == 4 && ponto != -1){
+            rotacionarPonto(Pontos, ponto, rotacao_pos);
+        }
+    }else if(key == GLUT_KEY_RIGHT){
+        if(val == 4 && ponto != -1){
+            rotacionarPonto(Pontos, ponto, rotacao_neg);
+        }
     }
-    
     glutPostRedisplay();
 }
 
@@ -171,6 +184,9 @@ int main(int argc, char** argv){
     Retas = criarListaRetas();
     Poligonos = criarListaPoligonos();
 
+    rotacao_pos = criarMatrizRotacao(theta);
+    rotacao_neg = criarMatrizRotacao(-theta);
+    
     init();
 
     glutMouseFunc(mouse);

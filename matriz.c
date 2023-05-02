@@ -16,22 +16,31 @@ Matriz_Transformacao* criarMatrizTransformacao(){
     return mt;
 }
 
-Matriz_Ponto* criarMatrizPonto(int x, int y){
+Matriz_Ponto* criarMatrizPonto(float x, float y){
     Matriz_Ponto *mp;
     mp = (Matriz_Ponto*)malloc(sizeof(Matriz_Ponto));
     if(mp != NULL){
         mp->matriz[0][0] = x;
         mp->matriz[1][0] = y;
-        mp->matriz[2][0] = 1;
+        mp->matriz[2][0] = 1.0;
     }
     return mp;
 }
 
-Matriz_Transformacao* criarMatrizTranslacao(int tx, int ty){
+Matriz_Transformacao* criarMatrizTranslacao(float tx, float ty){
     Matriz_Transformacao *mt = criarMatrizTransformacao();
     mt->matriz[0][2] = tx;
     mt->matriz[1][2] = ty;
     return mt;
+}
+
+Matriz_Transformacao* criarMatrizRotacao(float theta){
+    Matriz_Transformacao *mr = criarMatrizTransformacao();
+    mr->matriz[0][0] = cosf(theta);
+    mr->matriz[0][1] = -sinf(theta);
+    mr->matriz[1][0] = sinf(theta);
+    mr->matriz[1][1] = cosf(theta);
+    return mr;
 }
 
 Matriz_Transformacao* multiplicarMatrizesTransformacao(Matriz_Transformacao *mt1, Matriz_Transformacao *mt2){
