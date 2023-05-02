@@ -26,6 +26,8 @@ int ponto = -1;
 int reta = -1;
 int poligono = -1;
 
+int estado = 0;
+
 float Width = 300;
 float Height = 300;
 float mousex, mousey;
@@ -116,28 +118,42 @@ void desenhaPlano(){
 }
 
 void mouse(int button, int state , int x , int y) {
+    mousex = x - Width;
+    mousey = Height - y;
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 1){
-        mousex = x - Width;
-        mousey = Height - y;
         addPonto(Pontos, mousex, mousey);
-        glutPostRedisplay();
     }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 4){
-        mousex = x - Width;
-        mousey = Height - y;
-        ponto = selecionaPonto(Pontos, mousex, mousey, tolerancia);
-        glutPostRedisplay();
+        if (estado == 0)
+            ponto = selecionaPonto(Pontos, mousex, mousey, tolerancia);
+        else if (estado == 1){
+            int tx = mousex - Pontos->pontos[ponto].x;
+            int ty = mousey - Pontos->pontos[ponto].y;
+            Matriz_Transformacao *translacao = criarMatrizTranslacao(tx, ty);
+            transladarPonto(Pontos, mousex, mousey, ponto, translacao);
+        }
     }
+    glutPostRedisplay();
 }
 
 void special(int key, int x, int y){
 
-    if(key == GLUT_KEY_F1){
+    if(key == GLUT_KEY_F2){
         if(val == 4 && ponto != -1){
             if(removerPonto(Pontos, ponto))
                 ponto = -1;
         }
+    }else if(key == GLUT_KEY_F3){
+        if(val == 4 && ponto != -1){
+            if (estado == 1) estado = 0;
+            else estado = 1;
+        }
+    }else if(key == GLUT_KEY_F4){
+        if(val == 4 && ponto != -1){
+            if (estado == 2) estado = 0;
+            else estado = 2;
+        }
     }
-
+    
     glutPostRedisplay();
 }
 

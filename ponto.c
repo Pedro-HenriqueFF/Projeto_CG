@@ -20,13 +20,13 @@ int cheiaListaPontos(Lista_Pontos *lp){
         return 0;
 }
 
-int addPonto(Lista_Pontos *lp, float x, float y){
+int addPonto(Lista_Pontos *lp, float mx, float my){
     if (lp == NULL)
         return 0;
     else if (cheiaListaPontos(lp))
         return 0;
     else{
-        Ponto p = { x, y, verde };
+        Ponto p = { mx, my, verde };
         lp->pontos[lp->qtd_pontos] = p;
         lp->qtd_pontos++;
         return 1;
@@ -95,3 +95,17 @@ int pickPonto(float px, float py, float mx, float my, int t){
     }
     return 0;
 };
+
+int transladarPonto(Lista_Pontos *lp, float mx, float my, int ponto, Matriz_Transformacao *translacao){
+    if (lp == NULL)
+        return 0;
+    else{
+        int x = lp->pontos[ponto].x;
+        int y = lp->pontos[ponto].y;
+        Matriz_Ponto *mp = criarMatrizPonto(x, y);
+        mp = multiplicarMatrizPonto(translacao, mp);
+        lp->pontos[ponto].x = mp->matriz[0][0];
+        lp->pontos[ponto].y = mp->matriz[0][1];
+        return 1;
+    }
+}
