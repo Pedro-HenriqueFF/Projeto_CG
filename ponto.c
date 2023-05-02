@@ -33,13 +33,49 @@ int addPonto(Lista_Pontos *lp, float x, float y){
     }
 }
 
-void desenhaPontos(Lista_Pontos *lp){
+void desenhaPontos(Lista_Pontos *lp, int p){
 
     glPointSize(5.0);
     glBegin(GL_POINTS);
     for (int i = 0; i < lp->qtd_pontos; i++){
-        glColor3f(lp->pontos[i].cor.red, lp->pontos[i].cor.green, lp->pontos[i].cor.blue);
-        glVertex2f(lp->pontos[i].x, lp->pontos[i].y); 
+        if (i != p){
+            glColor3f(lp->pontos[i].cor.red, lp->pontos[i].cor.green, lp->pontos[i].cor.blue);
+            glVertex2f(lp->pontos[i].x, lp->pontos[i].y); 
+        }
     }
     glEnd();
+    if (p != -1){
+        glPointSize(7.0);
+        glBegin(GL_POINTS);
+        glColor3f(preto.red, preto.green, preto.blue);
+        glVertex2f(lp->pontos[p].x, lp->pontos[p].y); 
+        glEnd();
+        glPointSize(5.0);
+        glBegin(GL_POINTS);
+        glColor3f(lp->pontos[p].cor.red, lp->pontos[p].cor.green, lp->pontos[p].cor.blue);
+        glVertex2f(lp->pontos[p].x, lp->pontos[p].y); 
+        glEnd();
+    }
 }
+
+int selecionaPonto(Lista_Pontos *lp, float mx, float my, int t){
+    if (lp == NULL)
+        return 0;
+    else{
+        for (int i = 0; i < lp->qtd_pontos; i++){
+            if (pickPonto(lp->pontos[i].x, lp->pontos[i].y, mx, my, t)){
+                return i;
+            }
+        }
+        return -1;
+    }
+};
+
+int pickPonto(float px, float py, float mx, float my, int t){
+    if (mx <= px + t && mx >= px - t){
+        if (my <= py + t && my >= py - t){
+            return 1;
+        }
+    }
+    return 0;
+};

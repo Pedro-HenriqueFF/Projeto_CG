@@ -11,4 +11,6 @@ Lista_Pontos* criarListaPontos();
 int cheiaListaPontos(Lista_Pontos *);
 int addPonto(Lista_Pontos *, float x, float y);
 int removerPonto(Lista_Pontos *, Ponto ponto);
-void desenhaPontos(Lista_Pontos *);
+void desenhaPontos(Lista_Pontos *, int p);
+int selecionaPonto(Lista_Pontos *lp, float mx, float my, int t);
+int pickPonto(float px, float py, float mx, float my, int t);

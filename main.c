@@ -21,6 +21,11 @@ static int criar;
 static int selecionar;
 static int val = 0;
 
+int tolerancia = 5;
+int ponto = -1;
+int reta = -1;
+int poligono = -1;
+
 float Width = 300;
 float Height = 300;
 float mousex, mousey;
@@ -61,17 +66,27 @@ void createMenu(){
     mainmenu = glutCreateMenu(menu);
     glutAddSubMenu("Criar", criar);
     glutAddSubMenu("Selecionar", selecionar);
-    glutAddMenuEntry("Sair", 0);
+    glutAddMenuEntry("Cancelar", 0);
+    glutAddMenuEntry("Sair", -1);
 
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 void menu(int value){
-    if(value == 0){
+    if(value == -1){
         glutDestroyWindow(win);
         exit(0);
     }else{
         val = value;
+        if(val != 4){
+            ponto = -1;
+        }
+        if(val != 5){
+            reta = -1;
+        }
+        if(val != 6){
+            poligono = -1;
+        }
     }
 
     glutPostRedisplay();
@@ -87,7 +102,7 @@ void display(){
     desenhaPlano();
     desenhaPoligonos(Poligonos);
     desenhaRetas(Retas);
-    desenhaPontos(Pontos);
+    desenhaPontos(Pontos, ponto);
 
     glutSwapBuffers();
 }
@@ -109,7 +124,12 @@ void mouse(int button, int state , int x , int y) {
         mousey = Height - y;
         addPonto(Pontos, mousex, mousey);
         glutPostRedisplay();
-    } 
+    }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 4){
+        mousex = x - Width;
+        mousey = Height - y;
+        ponto = selecionaPonto(Pontos, mousex, mousey, tolerancia);
+        glutPostRedisplay();
+    }
 }
 
 int main(int argc, char** argv){
