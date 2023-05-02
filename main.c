@@ -78,15 +78,12 @@ void menu(int value){
         exit(0);
     }else{
         val = value;
-        if(val != 4){
+        if(val != 4)
             ponto = -1;
-        }
-        if(val != 5){
+        if(val != 5)
             reta = -1;
-        }
-        if(val != 6){
+        if(val != 6)
             poligono = -1;
-        }
     }
 
     glutPostRedisplay();
@@ -132,6 +129,18 @@ void mouse(int button, int state , int x , int y) {
     }
 }
 
+void special(int key, int x, int y){
+
+    if(key == GLUT_KEY_F1){
+        if(val == 4 && ponto != -1){
+            if(removerPonto(Pontos, ponto))
+                ponto = -1;
+        }
+    }
+
+    glutPostRedisplay();
+}
+
 int main(int argc, char** argv){
 
     glutInit(&argc, argv);
@@ -149,6 +158,7 @@ int main(int argc, char** argv){
     init();
 
     glutMouseFunc(mouse);
+    glutSpecialFunc(special);
     glutDisplayFunc(display);
     glutMainLoop();
     return 0;
