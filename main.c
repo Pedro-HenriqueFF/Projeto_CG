@@ -13,6 +13,7 @@ Matriz_Transformacao *rotacao_pos = NULL;
 Matriz_Transformacao *rotacao_neg = NULL;
 Matriz_Transformacao *aumentar = NULL;
 Matriz_Transformacao *diminuir = NULL;
+Matriz_Transformacao *borda = NULL;
 
 void init(void);
 void createMenu(void);
@@ -38,6 +39,7 @@ int estado = 0;
 
 float theta = 0.05;
 float scale = 1.05;
+float border = 1.025;
 
 float Width = 300;
 float Height = 300;
@@ -93,9 +95,10 @@ void menu(int value){
         val = value;
         ponto = -1;
         reta = -1;
+        poligono = -1;
         estado = 0;
         if(val == 5) reta = 0;
-        if(val != 6) poligono = -1;
+        if(val == 6) poligono = 0;
     }
     glutPostRedisplay();
 }
@@ -108,7 +111,7 @@ void display(){
     glLoadIdentity();
 
     desenhaPlano();
-    desenhaPoligonos(Poligonos);
+    desenhaPoligonos(Poligonos, poligono, borda);
     desenhaRetas(Retas, reta);
     desenhaPontos(Pontos, ponto);
 
@@ -232,6 +235,8 @@ int main(int argc, char** argv){
     aumentar = criarMatrizEscalar(scale);
     diminuir = criarMatrizEscalar(1/scale);
     
+    borda = criarMatrizEscalar(border);
+
     init();
 
     glutMouseFunc(mouse);

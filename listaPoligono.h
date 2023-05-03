@@ -12,4 +12,6 @@ int cheiaListaPoligonos(Lista_Poligonos *);
 void inserir(PontoPoligono **, Ponto ponto);
 int addPoligono(Lista_Poligonos *, int tamanho, Ponto *);
 int removerPoligono(Lista_Poligonos *, Poligono poligono);
-int desenhaPoligonos(Lista_Poligonos *);
+int desenhaPoligonos(Lista_Poligonos *, int p, Matriz_Transformacao *);
+Matriz_Transformacao* criarMatrizCompostaPoligono(Lista_Poligonos *, int p, Matriz_Transformacao *);
+int escalarPoligono(Lista_Poligonos *, int p, Matriz_Transformacao *);

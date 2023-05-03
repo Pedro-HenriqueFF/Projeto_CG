@@ -66,16 +66,18 @@ int addPoligono(Lista_Poligonos *lpl, int tamanho, Ponto *lpt){
     }
 }
 
-int desenhaPoligonos(Lista_Poligonos *lpl){
+int desenhaPoligonos(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar){
     if (lpl == NULL)
         return 0;
     else if (cheiaListaPoligonos(lpl))
         return 0;
     else{
+        PontoPoligono *aux;
+        aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
         glLineWidth(2.0);
         for (int i = 0; i < lpl->qtd_poligonos; i++){
-            if (lpl->poligonos[i].inicial != NULL){
-                PontoPoligono *aux = lpl->poligonos[i].inicial;
+            if (lpl->poligonos[i].inicial != NULL && i != p){
+                aux = lpl->poligonos[i].inicial;
                 glBegin(GL_POLYGON);
                 for (aux; aux != NULL; aux = aux->prox){
                     glColor3f(aux->p.cor.red, aux->p.cor.green, aux->p.cor.blue);
@@ -84,6 +86,65 @@ int desenhaPoligonos(Lista_Poligonos *lpl){
                 glEnd();
             }
         }
+        if (p != -1){
+            Matriz_Transformacao *composta = criarMatrizCompostaPoligono(lpl, p, escalar);
+            Matriz_Ponto *mp = NULL;
+            aux = lpl->poligonos[p].inicial;
+            glLineWidth(2.0);
+            glColor3f(preto.red, preto.green, preto.blue);
+            glBegin(GL_POLYGON);
+            for (aux; aux != NULL; aux = aux->prox){
+                mp = criarMatrizPonto(aux->p.x, aux->p.y);
+                mp = multiplicarMatrizPonto(composta, mp);
+                glVertex2f(mp->matriz[0][0], mp->matriz[0][1]);
+            }
+            glEnd();
+            aux = lpl->poligonos[p].inicial;
+            glBegin(GL_POLYGON);
+            for (aux; aux != NULL; aux = aux->prox){
+                glColor3f(aux->p.cor.red, aux->p.cor.green, aux->p.cor.blue);
+                glVertex2f(aux->p.x, aux->p.y);
+            }
+            glEnd();
+        }
         return 1;
     }
 }
+
+Matriz_Transformacao* criarMatrizCompostaPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *mt){
+    if (lpl == NULL)
+        return 0;
+    else{
+        Matriz_Transformacao *composta = criarMatrizTransformacao();
+        Matriz_Transformacao *retaCentro = criarMatrizTranslacao(
+            0 - lpl->poligonos[p].centroide.x, 
+            0 - lpl->poligonos[p].centroide.y
+        );
+        Matriz_Transformacao *centroReta = criarMatrizTranslacao(
+            lpl->poligonos[p].centroide.x, 
+            lpl->poligonos[p].centroide.y
+        );
+        composta = multiplicarMatrizesTransformacao(centroReta, mt);
+        composta = multiplicarMatrizesTransformacao(composta, retaCentro);
+        return composta;
+    }
+}
+
+/*
+int escalarPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar){
+    if (lpl == NULL)
+        return 0;
+    else{
+        Matriz_Transformacao *composta = criarMatrizCompostaPoligono(lpl, p, escalar);
+        Matriz_Ponto *mp1 = criarMatrizPonto(lr->retas[r].inicio.x, lr->retas[r].inicio.y);
+        Matriz_Ponto *mp2 = criarMatrizPonto(lr->retas[r].fim.x, lr->retas[r].fim.y);
+        mp1 = multiplicarMatrizPonto(composta, mp1);
+        mp2 = multiplicarMatrizPonto(composta, mp2);
+        lr->retas[r].inicio.x = mp1->matriz[0][0];
+        lr->retas[r].inicio.y = mp1->matriz[0][1];
+        lr->retas[r].fim.x = mp2->matriz[0][0];
+        lr->retas[r].fim.y = mp2->matriz[0][1];
+        return 1;
+    }
+}
+*/

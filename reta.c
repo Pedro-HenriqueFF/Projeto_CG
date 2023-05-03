@@ -99,7 +99,7 @@ int transladarReta(Lista_Retas *lr, int r, Matriz_Transformacao *translacao){
     }
 }
 
-int rotacionarReta(Lista_Retas *lr, int r, Matriz_Transformacao *rotacao){
+Matriz_Transformacao* criarMatrizCompostaReta(Lista_Retas *lr, int r, Matriz_Transformacao *mt){
     if (lr == NULL)
         return 0;
     else{
@@ -112,8 +112,17 @@ int rotacionarReta(Lista_Retas *lr, int r, Matriz_Transformacao *rotacao){
             lr->retas[r].centro.x, 
             lr->retas[r].centro.y
         );
-        composta = multiplicarMatrizesTransformacao(centroReta, rotacao);
+        composta = multiplicarMatrizesTransformacao(centroReta, mt);
         composta = multiplicarMatrizesTransformacao(composta, retaCentro);
+        return composta;
+    }
+}
+
+int rotacionarReta(Lista_Retas *lr, int r, Matriz_Transformacao *rotacao){
+    if (lr == NULL)
+        return 0;
+    else{
+        Matriz_Transformacao *composta = criarMatrizCompostaReta(lr, r, rotacao);
         Matriz_Ponto *mp1 = criarMatrizPonto(lr->retas[r].inicio.x, lr->retas[r].inicio.y);
         Matriz_Ponto *mp2 = criarMatrizPonto(lr->retas[r].fim.x, lr->retas[r].fim.y);
         mp1 = multiplicarMatrizPonto(composta, mp1);
@@ -122,8 +131,6 @@ int rotacionarReta(Lista_Retas *lr, int r, Matriz_Transformacao *rotacao){
         lr->retas[r].inicio.y = mp1->matriz[0][1];
         lr->retas[r].fim.x = mp2->matriz[0][0];
         lr->retas[r].fim.y = mp2->matriz[0][1];
-        lr->retas[r].centro.x = (lr->retas[r].inicio.x + lr->retas[r].fim.x)/2;
-        lr->retas[r].centro.y = (lr->retas[r].inicio.y + lr->retas[r].fim.y)/2;
         return 1;
     }
 }
@@ -132,17 +139,7 @@ int escalarReta(Lista_Retas *lr, int r, Matriz_Transformacao *escalar){
     if (lr == NULL)
         return 0;
     else{
-        Matriz_Transformacao *composta = criarMatrizTransformacao();
-        Matriz_Transformacao *retaCentro = criarMatrizTranslacao(
-            0 - lr->retas[r].centro.x, 
-            0 - lr->retas[r].centro.y
-        );
-        Matriz_Transformacao *centroReta = criarMatrizTranslacao(
-            lr->retas[r].centro.x, 
-            lr->retas[r].centro.y
-        );
-        composta = multiplicarMatrizesTransformacao(centroReta, escalar);
-        composta = multiplicarMatrizesTransformacao(composta, retaCentro);
+        Matriz_Transformacao *composta = criarMatrizCompostaReta(lr, r, escalar);
         Matriz_Ponto *mp1 = criarMatrizPonto(lr->retas[r].inicio.x, lr->retas[r].inicio.y);
         Matriz_Ponto *mp2 = criarMatrizPonto(lr->retas[r].fim.x, lr->retas[r].fim.y);
         mp1 = multiplicarMatrizPonto(composta, mp1);
@@ -151,8 +148,6 @@ int escalarReta(Lista_Retas *lr, int r, Matriz_Transformacao *escalar){
         lr->retas[r].inicio.y = mp1->matriz[0][1];
         lr->retas[r].fim.x = mp2->matriz[0][0];
         lr->retas[r].fim.y = mp2->matriz[0][1];
-        lr->retas[r].centro.x = (lr->retas[r].inicio.x + lr->retas[r].fim.x)/2;
-        lr->retas[r].centro.y = (lr->retas[r].inicio.y + lr->retas[r].fim.y)/2;
         return 1;
     }
 }
