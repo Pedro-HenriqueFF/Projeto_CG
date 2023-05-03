@@ -17,6 +17,8 @@ void createMenu(void);
 void menu(int value);
 void display(void);
 void desenhaPlano(void);
+void mouse(int button, int state , int x , int y);
+void special(int key, int x, int y);
 int main(int argc, char** argv);
 
 static int win;
@@ -86,14 +88,12 @@ void menu(int value){
         exit(0);
     }else{
         val = value;
-        if(val != 4)
-            ponto = -1;
-        if(val != 5)
-            reta = -1;
-        if(val != 6)
-            poligono = -1;
+        ponto = -1;
+        reta = -1;
+        estado = 0;
+        if(val == 5) reta = 0;
+        if(val != 6) poligono = -1;
     }
-
     glutPostRedisplay();
 }
 
@@ -106,7 +106,7 @@ void display(){
 
     desenhaPlano();
     desenhaPoligonos(Poligonos);
-    desenhaRetas(Retas);
+    desenhaRetas(Retas, reta);
     desenhaPontos(Pontos, ponto);
 
     glutSwapBuffers();
@@ -132,10 +132,21 @@ void mouse(int button, int state , int x , int y) {
         if (estado == 0)
             ponto = selecionaPonto(Pontos, mousex, mousey, tolerancia);
         else if (estado == 1){
-            int tx = mousex - Pontos->pontos[ponto].x;
-            int ty = mousey - Pontos->pontos[ponto].y;
-            Matriz_Transformacao *translacao = criarMatrizTranslacao(tx, ty);
-            transladarPonto(Pontos, mousex, mousey, ponto, translacao);
+            Matriz_Transformacao *translacao = criarMatrizTranslacao(
+                mousex - Pontos->pontos[ponto].x, 
+                mousey - Pontos->pontos[ponto].y
+            );
+            transladarPonto(Pontos, ponto, translacao);
+        }
+    }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 5){
+        if (estado == 0)
+            reta = 0;
+        else if (estado == 1){
+            Matriz_Transformacao *translacao = criarMatrizTranslacao(
+                mousex - Retas->retas[reta].centro.x, 
+                mousey - Retas->retas[reta].centro.y
+            );
+            transladarReta(Retas, reta, translacao);
         }
     }
     glutPostRedisplay();
@@ -146,10 +157,18 @@ void special(int key, int x, int y){
     if(key == GLUT_KEY_F2){
         if(val == 4 && ponto != -1){
             if(removerPonto(Pontos, ponto))
+                if (estado != 0) estado = 0;
                 ponto = -1;
+        }else if(val == 5 && reta != -1){
+            if(removerReta(Retas, reta))
+                if (estado != 0) estado = 0;
+                reta = 0;
         }
     }else if(key == GLUT_KEY_F3){
         if(val == 4 && ponto != -1){
+            if (estado == 1) estado = 0;
+            else estado = 1;
+        }else if(val == 5 && reta != -1){
             if (estado == 1) estado = 0;
             else estado = 1;
         }
@@ -159,11 +178,11 @@ void special(int key, int x, int y){
             else estado = 2;
         }
     }else if(key == GLUT_KEY_LEFT){
-        if(val == 4 && ponto != -1){
+        if(val == 4 && ponto != -1 && estado == 2){
             rotacionarPonto(Pontos, ponto, rotacao_pos);
         }
     }else if(key == GLUT_KEY_RIGHT){
-        if(val == 4 && ponto != -1){
+        if(val == 4 && ponto != -1 && estado == 2){
             rotacionarPonto(Pontos, ponto, rotacao_neg);
         }
     }

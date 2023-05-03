@@ -63,13 +63,13 @@ void desenhaPontos(Lista_Pontos *lp, int p){
     if (p != -1){
         glPointSize(7.0);
         glBegin(GL_POINTS);
-        glColor3f(preto.red, preto.green, preto.blue);
-        glVertex2f(lp->pontos[p].x, lp->pontos[p].y); 
+            glColor3f(preto.red, preto.green, preto.blue);
+            glVertex2f(lp->pontos[p].x, lp->pontos[p].y); 
         glEnd();
         glPointSize(5.0);
         glBegin(GL_POINTS);
-        glColor3f(lp->pontos[p].cor.red, lp->pontos[p].cor.green, lp->pontos[p].cor.blue);
-        glVertex2f(lp->pontos[p].x, lp->pontos[p].y); 
+            glColor3f(lp->pontos[p].cor.red, lp->pontos[p].cor.green, lp->pontos[p].cor.blue);
+            glVertex2f(lp->pontos[p].x, lp->pontos[p].y); 
         glEnd();
     }
 }
@@ -96,30 +96,26 @@ int pickPonto(float px, float py, float mx, float my, int t){
     return 0;
 };
 
-int transladarPonto(Lista_Pontos *lp, float mx, float my, int ponto, Matriz_Transformacao *translacao){
+int transladarPonto(Lista_Pontos *lp, int p, Matriz_Transformacao *translacao){
     if (lp == NULL)
         return 0;
     else{
-        float x = lp->pontos[ponto].x;
-        float y = lp->pontos[ponto].y;
-        Matriz_Ponto *mp = criarMatrizPonto(x, y);
+        Matriz_Ponto *mp = criarMatrizPonto(lp->pontos[p].x, lp->pontos[p].y);
         mp = multiplicarMatrizPonto(translacao, mp);
-        lp->pontos[ponto].x = mp->matriz[0][0];
-        lp->pontos[ponto].y = mp->matriz[0][1];
+        lp->pontos[p].x = mp->matriz[0][0];
+        lp->pontos[p].y = mp->matriz[0][1];
         return 1;
     }
 }
 
-int rotacionarPonto(Lista_Pontos *lp, int ponto, Matriz_Transformacao *rotacao){
+int rotacionarPonto(Lista_Pontos *lp, int p, Matriz_Transformacao *rotacao){
     if (lp == NULL)
         return 0;
     else{
-        float x = lp->pontos[ponto].x;
-        float y = lp->pontos[ponto].y;
-        Matriz_Ponto *mp = criarMatrizPonto(x, y);
+        Matriz_Ponto *mp = criarMatrizPonto(lp->pontos[p].x, lp->pontos[p].y);
         mp = multiplicarMatrizPonto(rotacao, mp);
-        lp->pontos[ponto].x = mp->matriz[0][0];
-        lp->pontos[ponto].y = mp->matriz[0][1];
+        lp->pontos[p].x = mp->matriz[0][0];
+        lp->pontos[p].y = mp->matriz[0][1];
         return 1;
     }
 }
