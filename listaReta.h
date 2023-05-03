@@ -14,3 +14,4 @@ int removerReta(Lista_Retas *, int r);
 void desenhaRetas(Lista_Retas *, int r);
 int transladarReta(Lista_Retas *, int r, Matriz_Transformacao *);
 int rotacionarReta(Lista_Retas *, int r, Matriz_Transformacao *);
+int escalarReta(Lista_Retas *, int r, Matriz_Transformacao *);

@@ -43,6 +43,13 @@ Matriz_Transformacao* criarMatrizRotacao(float theta){
     return mr;
 }
 
+Matriz_Transformacao* criarMatrizEscalar(float scale){
+    Matriz_Transformacao *ms = criarMatrizTransformacao();
+    ms->matriz[0][0] = scale;
+    ms->matriz[1][1] = scale;
+    return ms;
+}
+
 Matriz_Transformacao* multiplicarMatrizesTransformacao(Matriz_Transformacao *mt1, Matriz_Transformacao *mt2){
     if (mt1 == NULL || mt2 == NULL)
         return 0;

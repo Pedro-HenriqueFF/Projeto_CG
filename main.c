@@ -11,6 +11,8 @@ Lista_Poligonos *Poligonos = NULL;
 
 Matriz_Transformacao *rotacao_pos = NULL;
 Matriz_Transformacao *rotacao_neg = NULL;
+Matriz_Transformacao *aumentar = NULL;
+Matriz_Transformacao *diminuir = NULL;
 
 void init(void);
 void createMenu(void);
@@ -35,6 +37,7 @@ int poligono = -1;
 int estado = 0;
 
 float theta = 0.05;
+float scale = 1.05;
 
 float Width = 300;
 float Height = 300;
@@ -180,6 +183,11 @@ void special(int key, int x, int y){
             if (estado == 2) estado = 0;
             else estado = 2;
         }
+    }else if(key == GLUT_KEY_F5){
+        if(val == 5 && reta != -1){
+            if (estado == 3) estado = 0;
+            else estado = 3;
+        }
     }else if(key == GLUT_KEY_LEFT){
         if(val == 4 && ponto != -1 && estado == 2){
             rotacionarPonto(Pontos, ponto, rotacao_pos);
@@ -191,6 +199,14 @@ void special(int key, int x, int y){
             rotacionarPonto(Pontos, ponto, rotacao_neg);
         }else if(val == 5 && reta != -1 && estado == 2){
             rotacionarReta(Retas, reta, rotacao_neg);
+        }
+    }else if(key == GLUT_KEY_UP){
+        if(val == 5 && reta != -1 && estado == 3){
+            escalarReta(Retas, reta, aumentar);
+        }
+    }else if(key == GLUT_KEY_DOWN){
+        if(val == 5 && reta != -1 && estado == 3){
+            escalarReta(Retas, reta, diminuir);
         }
     }
     glutPostRedisplay();
@@ -212,6 +228,9 @@ int main(int argc, char** argv){
 
     rotacao_pos = criarMatrizRotacao(theta);
     rotacao_neg = criarMatrizRotacao(-theta);
+
+    aumentar = criarMatrizEscalar(scale);
+    diminuir = criarMatrizEscalar(1/scale);
     
     init();
 
