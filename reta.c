@@ -48,7 +48,6 @@ int removerReta(Lista_Retas *lr, int r){
 }
 
 void desenhaRetas(Lista_Retas *lr, int r){
-
     glLineWidth(2.0);
     glBegin(GL_LINES);
     for (int i = 0; i < lr->qtd_retas; i++){
@@ -78,7 +77,7 @@ void desenhaRetas(Lista_Retas *lr, int r){
 }
 
 int transladarReta(Lista_Retas *lr, int r, Matriz_Transformacao *translacao){
-    if (lr == NULL)
+    if (lr == NULL || lr->qtd_retas == 0)
         return 0;
     else{
         Matriz_Ponto *mp1 = criarMatrizPonto(lr->retas[r].inicio.x, lr->retas[r].inicio.y);
@@ -96,7 +95,7 @@ int transladarReta(Lista_Retas *lr, int r, Matriz_Transformacao *translacao){
 }
 
 Matriz_Transformacao* criarMatrizCompostaReta(Lista_Retas *lr, int r, Matriz_Transformacao *mt){
-    if (lr == NULL)
+    if (lr == NULL || lr->qtd_retas == 0)
         return 0;
     else{
         Matriz_Transformacao *composta = criarMatrizTransformacao();
@@ -115,7 +114,7 @@ Matriz_Transformacao* criarMatrizCompostaReta(Lista_Retas *lr, int r, Matriz_Tra
 }
 
 int rotacionarReta(Lista_Retas *lr, int r, Matriz_Transformacao *rotacao){
-    if (lr == NULL)
+    if (lr == NULL || lr->qtd_retas == 0)
         return 0;
     else{
         Matriz_Transformacao *composta = criarMatrizCompostaReta(lr, r, rotacao);
@@ -132,7 +131,7 @@ int rotacionarReta(Lista_Retas *lr, int r, Matriz_Transformacao *rotacao){
 }
 
 int escalarReta(Lista_Retas *lr, int r, Matriz_Transformacao *escalar){
-    if (lr == NULL)
+    if (lr == NULL || lr->qtd_retas == 0)
         return 0;
     else{
         Matriz_Transformacao *composta = criarMatrizCompostaReta(lr, r, escalar);

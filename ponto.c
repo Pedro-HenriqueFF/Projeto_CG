@@ -46,7 +46,6 @@ int removerPonto(Lista_Pontos *lp, int p){
 }
 
 void desenhaPontos(Lista_Pontos *lp, int p){
-
     glPointSize(5.0);
     glBegin(GL_POINTS);
     for (int i = 0; i < lp->qtd_pontos; i++){
@@ -71,7 +70,7 @@ void desenhaPontos(Lista_Pontos *lp, int p){
 }
 
 int selecionaPonto(Lista_Pontos *lp, float mx, float my, int t){
-    if (lp == NULL)
+    if (lp == NULL || lp->qtd_pontos == 0)
         return 0;
     else{
         for (int i = 0; i < lp->qtd_pontos; i++){
@@ -93,7 +92,7 @@ int pickPonto(float px, float py, float mx, float my, int t){
 };
 
 int transladarPonto(Lista_Pontos *lp, int p, Matriz_Transformacao *translacao){
-    if (lp == NULL)
+    if (lp == NULL || lp->qtd_pontos == 0)
         return 0;
     else{
         Matriz_Ponto *mp = criarMatrizPonto(lp->pontos[p].x, lp->pontos[p].y);
@@ -105,7 +104,7 @@ int transladarPonto(Lista_Pontos *lp, int p, Matriz_Transformacao *translacao){
 }
 
 int rotacionarPonto(Lista_Pontos *lp, int p, Matriz_Transformacao *rotacao){
-    if (lp == NULL)
+    if (lp == NULL || lp->qtd_pontos == 0)
         return 0;
     else{
         Matriz_Ponto *mp = criarMatrizPonto(lp->pontos[p].x, lp->pontos[p].y);

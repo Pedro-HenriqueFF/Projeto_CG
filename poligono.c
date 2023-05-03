@@ -79,9 +79,7 @@ int removerPoligono(Lista_Poligonos *lpl, int p){
 }
 
 int desenhaPoligonos(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar){
-    if (lpl == NULL)
-        return 0;
-    else if (cheiaListaPoligonos(lpl))
+    if (lpl == NULL || lpl->qtd_poligonos == 0)
         return 0;
     else{
         PontoPoligono *aux;
@@ -123,40 +121,85 @@ int desenhaPoligonos(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar)
     }
 }
 
+int transladarPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *translacao){
+    if (lpl == NULL || lpl->qtd_poligonos == 0)
+        return 0;
+    else{
+        PontoPoligono *aux;
+        aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
+        float centro_x = 0.0, centro_y = 0.0;
+        Matriz_Ponto *mp = NULL;
+        aux = lpl->poligonos[p].inicial;
+        for (aux; aux != NULL; aux = aux->prox){
+            mp = criarMatrizPonto(aux->p.x, aux->p.y);
+            mp = multiplicarMatrizPonto(translacao, mp);
+            aux->p.x = mp->matriz[0][0];
+            aux->p.y = mp->matriz[0][1];
+            centro_x += aux->p.x;
+            centro_y += aux->p.y;
+        }
+        centro_x /= lpl->poligonos[p].tamanho;
+        centro_y /= lpl->poligonos[p].tamanho;
+        lpl->poligonos[p].centroide.x = centro_x;
+        lpl->poligonos[p].centroide.y = centro_y;
+        return 1;
+    }
+}
+
 Matriz_Transformacao* criarMatrizCompostaPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *mt){
-    if (lpl == NULL)
+    if (lpl == NULL || lpl->qtd_poligonos == 0)
         return 0;
     else{
         Matriz_Transformacao *composta = criarMatrizTransformacao();
-        Matriz_Transformacao *retaCentro = criarMatrizTranslacao(
+        Matriz_Transformacao *poligonoCentro = criarMatrizTranslacao(
             0 - lpl->poligonos[p].centroide.x, 
             0 - lpl->poligonos[p].centroide.y
         );
-        Matriz_Transformacao *centroReta = criarMatrizTranslacao(
+        Matriz_Transformacao *centroPoligono = criarMatrizTranslacao(
             lpl->poligonos[p].centroide.x, 
             lpl->poligonos[p].centroide.y
         );
-        composta = multiplicarMatrizesTransformacao(centroReta, mt);
-        composta = multiplicarMatrizesTransformacao(composta, retaCentro);
+        composta = multiplicarMatrizesTransformacao(centroPoligono, mt);
+        composta = multiplicarMatrizesTransformacao(composta, poligonoCentro);
         return composta;
     }
 }
 
-/*
-int escalarPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar){
-    if (lpl == NULL)
+int rotacionarPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *rotacao){
+    if (lpl == NULL || lpl->qtd_poligonos == 0)
         return 0;
     else{
-        Matriz_Transformacao *composta = criarMatrizCompostaPoligono(lpl, p, escalar);
-        Matriz_Ponto *mp1 = criarMatrizPonto(lr->retas[r].inicio.x, lr->retas[r].inicio.y);
-        Matriz_Ponto *mp2 = criarMatrizPonto(lr->retas[r].fim.x, lr->retas[r].fim.y);
-        mp1 = multiplicarMatrizPonto(composta, mp1);
-        mp2 = multiplicarMatrizPonto(composta, mp2);
-        lr->retas[r].inicio.x = mp1->matriz[0][0];
-        lr->retas[r].inicio.y = mp1->matriz[0][1];
-        lr->retas[r].fim.x = mp2->matriz[0][0];
-        lr->retas[r].fim.y = mp2->matriz[0][1];
+        Matriz_Transformacao *composta = criarMatrizCompostaPoligono(lpl, p, rotacao);
+        PontoPoligono *aux;
+        aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
+        Matriz_Ponto *mp = NULL;
+        aux = lpl->poligonos[p].inicial;
+        for (aux; aux != NULL; aux = aux->prox){
+            mp = criarMatrizPonto(aux->p.x, aux->p.y);
+            mp = multiplicarMatrizPonto(composta, mp);
+            aux->p.x = mp->matriz[0][0];
+            aux->p.y = mp->matriz[0][1];
+        }
         return 1;
     }
 }
-*/
+
+int escalarPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar){
+    if (lpl == NULL || lpl->qtd_poligonos == 0)
+        return 0;
+    else{
+        Matriz_Transformacao *composta = criarMatrizCompostaPoligono(lpl, p, escalar);
+        PontoPoligono *aux;
+        aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
+        float centro_x = 0.0, centro_y = 0.0;
+        Matriz_Ponto *mp = NULL;
+        aux = lpl->poligonos[p].inicial;
+        for (aux; aux != NULL; aux = aux->prox){
+            mp = criarMatrizPonto(aux->p.x, aux->p.y);
+            mp = multiplicarMatrizPonto(composta, mp);
+            aux->p.x = mp->matriz[0][0];
+            aux->p.y = mp->matriz[0][1];
+        }
+        return 1;
+    }
+}

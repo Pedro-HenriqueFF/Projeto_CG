@@ -39,7 +39,7 @@ int estado = 0;
 
 float theta = 0.05;
 float scale = 1.05;
-float border = 1.025;
+float border = 1.02;
 
 float Width = 300;
 float Height = 300;
@@ -97,8 +97,8 @@ void menu(int value){
         reta = -1;
         poligono = -1;
         estado = 0;
-        if(val == 5) reta = 0;
-        if(val == 6) poligono = 0;
+        if(val == 5) reta = Retas->qtd_retas - 1;
+        if(val == 6) poligono = Poligonos->qtd_poligonos - 1;
     }
     glutPostRedisplay();
 }
@@ -146,13 +146,23 @@ void mouse(int button, int state , int x , int y) {
         }
     }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 5){
         if (estado == 0)
-            reta = 0;
+            reta = Retas->qtd_retas - 1;
         else if (estado == 1){
             Matriz_Transformacao *translacao = criarMatrizTranslacao(
                 mousex - Retas->retas[reta].centro.x, 
                 mousey - Retas->retas[reta].centro.y
             );
             transladarReta(Retas, reta, translacao);
+        }
+    }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 6){
+        if (estado == 0)
+            poligono = Poligonos->qtd_poligonos - 1;
+        else if (estado == 1){
+            Matriz_Transformacao *translacao = criarMatrizTranslacao(
+                mousex - Poligonos->poligonos[poligono].centroide.x, 
+                mousey - Poligonos->poligonos[poligono].centroide.y
+            );
+            transladarPoligono(Poligonos, poligono, translacao);
         }
     }
     glutPostRedisplay();
@@ -184,6 +194,9 @@ void special(int key, int x, int y){
         }else if(val == 5 && reta != -1){
             if (estado == 1) estado = 0;
             else estado = 1;
+        }else if(val == 6 && poligono != -1){
+            if (estado == 1) estado = 0;
+            else estado = 1;
         }
     }else if(key == GLUT_KEY_F4){
         if(val == 4 && ponto != -1){
@@ -192,9 +205,15 @@ void special(int key, int x, int y){
         }else if(val == 5 && reta != -1){
             if (estado == 2) estado = 0;
             else estado = 2;
+        }else if(val == 6 && poligono != -1){
+            if (estado == 2) estado = 0;
+            else estado = 2;
         }
     }else if(key == GLUT_KEY_F5){
         if(val == 5 && reta != -1){
+            if (estado == 3) estado = 0;
+            else estado = 3;
+        }else if(val == 6 && poligono != -1){
             if (estado == 3) estado = 0;
             else estado = 3;
         }
@@ -203,20 +222,28 @@ void special(int key, int x, int y){
             rotacionarPonto(Pontos, ponto, rotacao_pos);
         }else if(val == 5 && reta != -1 && estado == 2){
             rotacionarReta(Retas, reta, rotacao_pos);
+        }else if(val == 6 && poligono != -1 && estado == 2){
+            rotacionarPoligono(Poligonos, poligono, rotacao_pos);
         }
     }else if(key == GLUT_KEY_RIGHT){
         if(val == 4 && ponto != -1 && estado == 2){
             rotacionarPonto(Pontos, ponto, rotacao_neg);
         }else if(val == 5 && reta != -1 && estado == 2){
             rotacionarReta(Retas, reta, rotacao_neg);
+        }else if(val == 6 && poligono != -1 && estado == 2){
+            rotacionarPoligono(Poligonos, poligono, rotacao_neg);
         }
     }else if(key == GLUT_KEY_UP){
         if(val == 5 && reta != -1 && estado == 3){
             escalarReta(Retas, reta, aumentar);
+        }else if(val == 6 && poligono != -1 && estado == 3){
+            escalarPoligono(Poligonos, poligono, aumentar);
         }
     }else if(key == GLUT_KEY_DOWN){
         if(val == 5 && reta != -1 && estado == 3){
             escalarReta(Retas, reta, diminuir);
+        }else if(val == 6 && poligono != -1 && estado == 3){
+            escalarPoligono(Poligonos, poligono, diminuir);
         }
     }
     glutPostRedisplay();
