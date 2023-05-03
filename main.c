@@ -176,14 +176,21 @@ void special(int key, int x, int y){
         if(val == 4 && ponto != -1){
             if (estado == 2) estado = 0;
             else estado = 2;
+        }else if(val == 5 && reta != -1){
+            if (estado == 2) estado = 0;
+            else estado = 2;
         }
     }else if(key == GLUT_KEY_LEFT){
         if(val == 4 && ponto != -1 && estado == 2){
             rotacionarPonto(Pontos, ponto, rotacao_pos);
+        }else if(val == 5 && reta != -1 && estado == 2){
+            rotacionarReta(Retas, reta, rotacao_pos);
         }
     }else if(key == GLUT_KEY_RIGHT){
         if(val == 4 && ponto != -1 && estado == 2){
             rotacionarPonto(Pontos, ponto, rotacao_neg);
+        }else if(val == 5 && reta != -1 && estado == 2){
+            rotacionarReta(Retas, reta, rotacao_neg);
         }
     }
     glutPostRedisplay();
