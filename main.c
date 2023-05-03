@@ -162,13 +162,20 @@ void special(int key, int x, int y){
 
     if(key == GLUT_KEY_F2){
         if(val == 4 && ponto != -1){
-            if(removerPonto(Pontos, ponto))
+            if(removerPonto(Pontos, ponto)){
                 if (estado != 0) estado = 0;
                 ponto = -1;
+            }
         }else if(val == 5 && reta != -1){
-            if(removerReta(Retas, reta))
+            if(removerReta(Retas, reta)){
                 if (estado != 0) estado = 0;
                 reta = 0;
+            }
+        }else if(val == 6 && poligono != -1){
+            if(removerPoligono(Poligonos, poligono)){
+                if (estado != 0) estado = 0;
+                poligono = 0;
+            }
         }
     }else if(key == GLUT_KEY_F3){
         if(val == 4 && ponto != -1){

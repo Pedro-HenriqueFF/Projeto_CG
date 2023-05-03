@@ -36,14 +36,10 @@ int addReta(Lista_Retas *lr, Ponto a, Ponto b){
 }
 
 int removerReta(Lista_Retas *lr, int r){
-    if (lr == NULL)
+    if (lr == NULL || lr->qtd_retas == 0)
         return 0;
     else{
-        int i = 0;
-        while(i != r){
-            i++;
-        }
-        for (int j = i; j < lr->qtd_retas; j++){
+        for (int j = r; j < lr->qtd_retas; j++){
             lr->retas[j] = lr->retas[j+1];
         }
         lr->qtd_retas--;

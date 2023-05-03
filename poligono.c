@@ -66,6 +66,18 @@ int addPoligono(Lista_Poligonos *lpl, int tamanho, Ponto *lpt){
     }
 }
 
+int removerPoligono(Lista_Poligonos *lpl, int p){
+    if (lpl == NULL || lpl->qtd_poligonos == 0)
+        return 0;
+    else{
+        for (int j = p; j < lpl->qtd_poligonos; j++){
+            lpl->poligonos[j] = lpl->poligonos[j+1];
+        }
+        lpl->qtd_poligonos--;
+        return 1;
+    }
+}
+
 int desenhaPoligonos(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar){
     if (lpl == NULL)
         return 0;

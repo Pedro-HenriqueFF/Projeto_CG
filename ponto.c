@@ -34,14 +34,10 @@ int addPonto(Lista_Pontos *lp, float mx, float my){
 }
 
 int removerPonto(Lista_Pontos *lp, int p){
-    if (lp == NULL)
+    if (lp == NULL || lp->qtd_pontos == 0)
         return 0;
     else{
-        int i = 0;
-        while(i != p){
-            i++;
-        }
-        for (int j = i; j < lp->qtd_pontos; j++){
+        for (int j = p; j < lp->qtd_pontos; j++){
             lp->pontos[j] = lp->pontos[j+1];
         }
         lp->qtd_pontos--;
