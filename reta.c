@@ -21,17 +21,27 @@ int cheiaListaRetas(Lista_Retas *lr){
         return 0;
 }
 
-int addReta(Lista_Retas *lr, Ponto a, Ponto b){
+int addReta(Lista_Retas *lr, float mx, float my, int desenhando){
     if (lr == NULL)
         return 0;
     else if (cheiaListaRetas(lr))
         return 0;
     else{
-        Ponto centro = { (a.x+b.x)/2, (a.y+b.y)/2, preto };
-        Reta r = { a, centro, b };
-        lr->retas[lr->qtd_retas] = r;
-        lr->qtd_retas++;
-        return 1;
+        if(desenhando == -1){
+            lr->retas[lr->qtd_retas].inicio.x = mx;
+            lr->retas[lr->qtd_retas].inicio.y = my;
+            lr->retas[lr->qtd_retas].inicio.cor = vermelho;
+            return 1;
+        }else{
+            lr->retas[lr->qtd_retas].fim.x = mx;
+            lr->retas[lr->qtd_retas].fim.y = my;
+            lr->retas[lr->qtd_retas].fim.cor = vermelho;
+            lr->retas[lr->qtd_retas].centro.x = (lr->retas[lr->qtd_retas].inicio.x + lr->retas[lr->qtd_retas].fim.x)/2;
+            lr->retas[lr->qtd_retas].centro.y = (lr->retas[lr->qtd_retas].inicio.y + lr->retas[lr->qtd_retas].fim.y)/2;
+            lr->retas[lr->qtd_retas].centro.cor = preto;
+            lr->qtd_retas++;
+            return -1;
+        }
     }
 }
 

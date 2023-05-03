@@ -9,7 +9,7 @@ typedef struct{
 
 Lista_Retas* criarListaRetas();
 int cheiaListaRetas(Lista_Retas *);
-int addReta(Lista_Retas *, Ponto a, Ponto b);
+int addReta(Lista_Retas *, float mx, float my, int desenhando);
 int removerReta(Lista_Retas *, int r);
 void desenhaRetas(Lista_Retas *, int r);
 int transladarReta(Lista_Retas *, int r, Matriz_Transformacao *);
