@@ -3,6 +3,8 @@ Aplicação estilo Paint usando o OpenGL em C
 
 Instruções para usar o programa:
 
+Para executar o programa, basta executar o comando "mingw32-make" no terminal dentro da pasta do projeto.
+
 Para abrir o menu, clique com o botão direito do mouse na tela.
 
 No menu, escolha o modo que quer utilizar.
