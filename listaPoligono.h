@@ -14,6 +14,8 @@ int addPoligono(Lista_Poligonos *, float mx, float my, int desenhando);
 void inserir(PontoPoligono **, float x, float y);
 int removerPoligono(Lista_Poligonos *, int p);
 int desenhaPoligonos(Lista_Poligonos *, int p, Matriz_Transformacao *);
+int selecionaPoligono(Lista_Poligonos *, float mx, float my);
+int pnpoly(Lista_Poligonos *lp, float mx, float my, int p);
 int transladarPoligono(Lista_Poligonos *, int p, Matriz_Transformacao *);
 Matriz_Transformacao* criarMatrizCompostaPoligono(Lista_Poligonos *, int p, Matriz_Transformacao *);
 int rotacionarPoligono(Lista_Poligonos *, int p, Matriz_Transformacao *);

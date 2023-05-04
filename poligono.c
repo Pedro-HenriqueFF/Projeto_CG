@@ -145,6 +145,40 @@ int desenhaPoligonos(Lista_Poligonos *lpl, int p, Matriz_Transformacao *escalar)
     }
 }
 
+int selecionaPoligono(Lista_Poligonos *lpl, float mx, float my){
+    if (lpl == NULL || lpl->qtd_poligonos == 0)
+        return 0;
+    else{
+        for (int i = 0; i < lpl->qtd_poligonos; i++){
+            if (pnpoly(lpl, mx, my, i)){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+int pnpoly(Lista_Poligonos *lpl, float mx, float my, int p){
+    float vertx[lpl->poligonos[p].tamanho], verty[lpl->poligonos[p].tamanho];
+    PontoPoligono *aux;
+    aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
+    aux = lpl->poligonos[p].inicial;
+    int count = 0;
+    for (aux; aux != NULL; aux = aux->prox){
+        vertx[count] = aux->p.x;
+        verty[count] = aux->p.y;
+        count++;
+    }
+    int i, j, c = 0;
+    for (i = 0, j = lpl->poligonos[p].tamanho-1; i < lpl->poligonos[p].tamanho; j = i++) {
+        if ( ((verty[i]>my) != (verty[j]>my)) &&
+        (mx < (vertx[j]-vertx[i]) * (my-verty[i]) / (verty[j]-verty[i]) + vertx[i]) )
+        c = !c;
+    }
+    return c;
+    
+}
+
 int transladarPoligono(Lista_Poligonos *lpl, int p, Matriz_Transformacao *translacao){
     if (lpl == NULL || lpl->qtd_poligonos == 0)
         return 0;

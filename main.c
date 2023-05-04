@@ -41,7 +41,7 @@ int desenhandoPoligono = -1;
 
 float theta = 0.05;
 float scale = 1.05;
-float border = 1.02;
+float border = 1.03;
 
 float Width = 300;
 float Height = 300;
@@ -87,7 +87,6 @@ void menu(int value){
         estado = 0;
         desenhandoReta = -1;
         desenhandoPoligono = -1;
-        if(val == 6) poligono = Poligonos->qtd_poligonos - 1;
     }
     glutPostRedisplay();
 }
@@ -149,7 +148,7 @@ void mouse(int button, int state , int x , int y) {
         }
     }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 6){
         if (estado == 0)
-            poligono = Poligonos->qtd_poligonos - 1;
+            poligono = selecionaPoligono(Poligonos, mousex, mousey);
         else if (estado == 1){
             Matriz_Transformacao *translacao = criarMatrizTranslacao(
                 mousex - Poligonos->poligonos[poligono].centroide.x, 
@@ -177,12 +176,12 @@ void special(int key, int x, int y){
         }else if(val == 5 && reta != -1){
             if(removerReta(Retas, reta)){
                 if (estado != 0) estado = 0;
-                reta = 0;
+                reta = -1;
             }
         }else if(val == 6 && poligono != -1){
             if(removerPoligono(Poligonos, poligono)){
                 if (estado != 0) estado = 0;
-                poligono = 0;
+                poligono = -1;
             }
         }
     }else if(key == GLUT_KEY_F3){
