@@ -9,8 +9,9 @@ typedef struct{
 
 Lista_Poligonos* criarListaPoligonos();
 int cheiaListaPoligonos(Lista_Poligonos *);
-void inserir(PontoPoligono **, Ponto ponto);
-int addPoligono(Lista_Poligonos *, int tamanho, Ponto *);
+int finalizaPoligono(Lista_Poligonos *, int desenhando);
+int addPoligono(Lista_Poligonos *, float mx, float my, int desenhando);
+void inserir(PontoPoligono **, float x, float y);
 int removerPoligono(Lista_Poligonos *, int p);
 int desenhaPoligonos(Lista_Poligonos *, int p, Matriz_Transformacao *);
 int transladarPoligono(Lista_Poligonos *, int p, Matriz_Transformacao *);

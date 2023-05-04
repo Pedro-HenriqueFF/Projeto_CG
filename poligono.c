@@ -21,49 +21,73 @@ int cheiaListaPoligonos(Lista_Poligonos *lpl){
         return 0;
 }
 
-void inserir(PontoPoligono **antigo, Ponto ponto){
-    PontoPoligono *novo;
-    novo = (PontoPoligono*) malloc(sizeof(PontoPoligono));
-    if(novo == NULL) exit(0);
-    novo->p = ponto;
-    novo->prox = NULL;
-    PontoPoligono *aux;
-    aux = *antigo;
-    aux->prox = novo;
-    *antigo = aux;
-}
-
-int addPoligono(Lista_Poligonos *lpl, int tamanho, Ponto *lpt){
+int finalizaPoligono(Lista_Poligonos *lpl, int desenhando){
     if (lpl == NULL)
         return 0;
     else if (cheiaListaPoligonos(lpl))
         return 0;
     else{
-        Ponto centro = { 0.0, 0.0, preto };
-        PontoPoligono *aux;
-        aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
-        if(aux != NULL){
-            aux->p = lpt[0];
-            aux->prox = NULL;
-            centro.x += aux->p.x;
-            centro.y += aux->p.y;
+        if(desenhando == 1 && lpl->poligonos[lpl->qtd_poligonos].tamanho > 2){
+            PontoPoligono *aux;
+            aux = (PontoPoligono*)malloc(sizeof(PontoPoligono));
+            float centro_x = 0.0, centro_y = 0.0;
+            aux = lpl->poligonos[lpl->qtd_poligonos].inicial;
+            for (aux; aux != NULL; aux = aux->prox){
+                centro_x += aux->p.x;
+                centro_y += aux->p.y;
+            }
+            centro_x /= lpl->poligonos[lpl->qtd_poligonos].tamanho;
+            centro_y /= lpl->poligonos[lpl->qtd_poligonos].tamanho;
+            lpl->poligonos[lpl->qtd_poligonos].centroide.x = centro_x;
+            lpl->poligonos[lpl->qtd_poligonos].centroide.y = centro_y;
+            lpl->qtd_poligonos++;
+            return 1;
         }
-        lpl->poligonos[lpl->qtd_poligonos].tamanho = tamanho;
-        lpl->poligonos[lpl->qtd_poligonos].inicial = aux;
-        PontoPoligono *aux2;
-        aux2 = aux;
-        for (int i = 1; i < tamanho; i++){
-            inserir(&aux2, lpt[i]);
-            aux2 = aux2->prox;
-            centro.x += aux2->p.x;
-            centro.y += aux2->p.y;
+        return 0;
+    }
+}
+
+int addPoligono(Lista_Poligonos *lpl, float mx, float my, int desenhando){
+    if (lpl == NULL)
+        return 0;
+    else if (cheiaListaPoligonos(lpl))
+        return 0;
+    else{
+        if(desenhando == -1){
+            PontoPoligono *novo;
+            novo = (PontoPoligono*)malloc(sizeof(PontoPoligono));
+            if(novo != NULL){
+                novo->p.x = mx;
+                novo->p.y = my;
+                novo->p.cor = azul;
+                novo->prox = NULL;
+            }
+            lpl->poligonos[lpl->qtd_poligonos].tamanho = 1;
+            lpl->poligonos[lpl->qtd_poligonos].inicial = novo;
+        }else{
+            PontoPoligono *fim;
+            fim = (PontoPoligono*)malloc(sizeof(PontoPoligono));
+            fim = lpl->poligonos[lpl->qtd_poligonos].inicial;
+            for (fim; fim->prox != NULL; fim = fim->prox){}
+            inserir(&fim, mx, my);
+            lpl->poligonos[lpl->qtd_poligonos].tamanho += 1;
         }
-        centro.x /= tamanho;
-        centro.y /= tamanho;
-        lpl->poligonos[lpl->qtd_poligonos].centroide = centro;
-        lpl->qtd_poligonos++;
         return 1;
     }
+}
+
+void inserir(PontoPoligono **antigo, float x, float y){
+    PontoPoligono *novo;
+    novo = (PontoPoligono*) malloc(sizeof(PontoPoligono));
+    if(novo == NULL) exit(0);
+    novo->p.x = x;
+    novo->p.y = y;
+    novo->p.cor = azul;
+    novo->prox = NULL;
+    PontoPoligono *aux;
+    aux = *antigo;
+    aux->prox = novo;
+    *antigo = aux;
 }
 
 int removerPoligono(Lista_Poligonos *lpl, int p){

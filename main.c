@@ -53,13 +53,6 @@ void init(){
 
     glMatrixMode(GL_PROJECTION); 
     glOrtho(-Width,Width,-Height,Height,-1.0f,1.0f);
-
-    Ponto P1 = { 0, -300, azul }, P2 = { 300, -300, azul }, P3 = { 150, 0, azul };
-    Ponto lista[] = { P1, P2, P3 };
-    addPoligono(Poligonos, sizeof(lista)/sizeof(lista[0]), &lista);
-    Ponto P4 = { -300, 0, azul }, P5 = { -60, 300, azul }, P6 = { -300, 300, azul }, P7 = { -300, 0, azul }, P8 = { 0, 0, azul }, P9 = { 0, 240, azul };
-    Ponto lista2[] = { P4, P5, P6, P7, P8, P9 };
-    addPoligono(Poligonos, sizeof(lista2)/sizeof(lista2[0]), &lista2);
 }
 
 void createMenu(){
@@ -133,6 +126,8 @@ void mouse(int button, int state , int x , int y) {
         addPonto(Pontos, mousex, mousey);
     }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 2){
         desenhandoReta = addReta(Retas, mousex, mousey, desenhandoReta);
+    }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 3){
+        desenhandoPoligono = addPoligono(Poligonos, mousex, mousey, desenhandoPoligono);
     }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 4){
         if (estado == 0)
             ponto = selecionaPonto(Pontos, mousex, mousey, tolerancia);
@@ -169,7 +164,12 @@ void mouse(int button, int state , int x , int y) {
 
 void special(int key, int x, int y){
 
-    if(key == GLUT_KEY_F2){
+    if(key == GLUT_KEY_F1){
+        if(val == 3) {
+            finalizaPoligono(Poligonos, desenhandoPoligono);
+            desenhandoPoligono = -1;
+        }
+    }else if(key == GLUT_KEY_F2){
         if(val == 4 && ponto != -1){
             if(removerPonto(Pontos, ponto)){
                 if (estado != 0) estado = 0;
