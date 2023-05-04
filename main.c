@@ -87,7 +87,6 @@ void menu(int value){
         estado = 0;
         desenhandoReta = -1;
         desenhandoPoligono = -1;
-        if(val == 5) reta = Retas->qtd_retas - 1;
         if(val == 6) poligono = Poligonos->qtd_poligonos - 1;
     }
     glutPostRedisplay();
@@ -140,7 +139,7 @@ void mouse(int button, int state , int x , int y) {
         }
     }else if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && val == 5){
         if (estado == 0)
-            reta = Retas->qtd_retas - 1;
+            reta = selecionaReta(Retas, mousex, mousey, tolerancia);
         else if (estado == 1){
             Matriz_Transformacao *translacao = criarMatrizTranslacao(
                 mousex - Retas->retas[reta].centro.x, 

@@ -3,6 +3,12 @@
 #include "ponto.c"
 #include "listaReta.h"
 
+const int INSIDE = 0; // 0000
+const int LEFT = 1; // 0001
+const int RIGHT = 2; // 0010
+const int BOTTOM = 4; // 0100
+const int TOP = 8; // 1000
+
 Lista_Retas* criarListaRetas(){
     Lista_Retas *lr;
     lr = (Lista_Retas*)malloc(sizeof(Lista_Retas));
@@ -84,6 +90,77 @@ void desenhaRetas(Lista_Retas *lr, int r){
             glVertex2f(lr->retas[r].fim.x, lr->retas[r].fim.y);
         glEnd();
     }
+}
+
+int selecionaReta(Lista_Retas *lr, float mx, float my, int t){
+    if (lr == NULL || lr->qtd_retas == 0)
+        return 0;
+    else{
+        for (int i = 0; i < lr->qtd_retas; i++){
+            float xi = lr->retas[i].inicio.x;
+            float yi = lr->retas[i].inicio.y;
+            float xf = lr->retas[i].fim.x;
+            float yf = lr->retas[i].fim.y;
+            if (cohenSutherlandClip(xi, yi, xf, yf, mx, my, t)){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+int cohenSutherlandClip(float x1, float y1, float x2, float y2, float mx, float my, int t){
+    int code1 = computeCode(x1, y1, mx, my, t);
+    int code2 = computeCode(x2, y2, mx, my, t);
+    int accept = 0;
+ 
+    while (TRUE) {
+        if ((code1 == 0) && (code2 == 0)) {
+            accept = 1;
+            break;
+        }
+        else if (code1 & code2) break;
+        else {
+            int code_out;
+            float x, y;
+            if (code1 != 0) code_out = code1;
+            else code_out = code2;
+ 
+            if (code_out & TOP) {
+                x = x1 + (x2 - x1) * ((my + t) - y1) / (y2 - y1);
+                y = (my + t);
+            }else if (code_out & BOTTOM) {
+                x = x1 + (x2 - x1) * ((my - t) - y1) / (y2 - y1);
+                y = (my - t);
+            }else if (code_out & RIGHT) {
+                y = y1 + (y2 - y1) * ((mx + t) - x1) / (x2 - x1);
+                x = (mx + t);
+            }else if (code_out & LEFT) {
+                y = y1 + (y2 - y1) * ((mx - t) - x1) / (x2 - x1);
+                x = (mx - t);
+            }
+ 
+            if (code_out == code1) {
+                x1 = x;
+                y1 = y;
+                code1 = computeCode(x1, y1, mx, my, t);
+            }else {
+                x2 = x;
+                y2 = y;
+                code2 = computeCode(x2, y2, mx, my, t);
+            }
+        }
+    }
+    return accept;
+}
+
+int computeCode(float x, float y, float mx, float my, int t){
+    int code = INSIDE;
+    if (x < mx - t) code |= LEFT;
+    else if (x > mx + t) code |= RIGHT;
+    if (y < my - t) code |= BOTTOM;
+    else if (y > my + t) code |= TOP;
+    return code;
 }
 
 int transladarReta(Lista_Retas *lr, int r, Matriz_Transformacao *translacao){
